@@ -72,6 +72,7 @@ class ciWMFVideoPlayer
 				CPlayer* mPlayer;
 		};
 
+
 		CPlayer* mPlayer;
 		int mId;
 
@@ -119,4 +120,20 @@ class ciWMFVideoPlayer
 		PresentationEndedSignal& getPresentationEndedSignal();
 
 		static void forceExit();
+
+		cinder::signals::Signal<void()> readySignal;
+		cinder::signals::Signal<void()>& getReadySignal() { return readySignal; }
+
+		inline bool checkNewFrame() {
+			update();
+			return false;
+		}
+
+		ci::gl::TextureRef getTexture() { return mTex; }
+
+		static std::shared_ptr<ciWMFVideoPlayer> create(const ci::fs::path& filePath) {
+			auto ref = std::make_shared<ciWMFVideoPlayer>();
+			ref->loadMovie(filePath);
+			return ref;
+		}
 };
